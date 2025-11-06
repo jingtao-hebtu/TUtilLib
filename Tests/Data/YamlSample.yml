@@ -1,0 +1,20 @@
+AppName: "BreakerAppName"
+AppKeys:
+  Key1: "Value1"
+  Key2: "Value2"
+  Key3: "Value3"
+IntArray:
+  - 1
+  - 2
+  - 3
+StrArray:
+  - red
+  - green
+  - blue
+NestedKey1:
+  NestedKey12:
+    NestedKey123: 123
+    NestedKey124: 124
+  NestedKey13:
+    NestedKey134: 134
+    NestedKey135: 135
