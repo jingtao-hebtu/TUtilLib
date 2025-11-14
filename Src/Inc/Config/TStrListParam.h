@@ -14,6 +14,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <initializer_list>
 #include "TaoUtilDefine.h"
 
 

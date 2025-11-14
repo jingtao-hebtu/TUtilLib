@@ -13,6 +13,7 @@
 
 #include <typeindex>
 #include <stdexcept>
+#include <string>
 #include "TaoUtilDefine.h"
 
 

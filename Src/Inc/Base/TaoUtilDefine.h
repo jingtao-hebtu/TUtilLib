@@ -19,7 +19,7 @@
         #define TAO_UTIL_API __declspec(dllimport)
     #endif
 #else
-    #define TAO_UTLI_API
+    #define TAO_UTIL_API
 #endif
 
 
