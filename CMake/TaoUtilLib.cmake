@@ -21,7 +21,7 @@ set(TAO_UTIL_LIB_SRC_PATH "${TAO_UTIL_LIB_PATH}/Src/Src")
 set(TAO_THIRD_PARTY_PATH ${TAO_UTIL_LIB_PATH}/ThirdParty)
 
 
-set(TAO_UTIL_LIBS "")
+set(TAO_UTIL_LIBS)
 
 
 include(${TAO_UTIL_LIB_PATH}/CMake/TBaseUtil.cmake)
