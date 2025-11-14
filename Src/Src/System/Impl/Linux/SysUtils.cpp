@@ -10,7 +10,9 @@
 **************************************************************************/
 #include "TSysUtils.h"
 
+#include <array>
 #include <sstream>
+#include <stdexcept>
 #include <ctime>
 #include <unistd.h>
 #include <netdb.h>
@@ -22,6 +24,10 @@
 #define TAO_ACCESS(fileName, accessMode) access(fileName,accessMode)
 #define MKDIR(path) mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
 
+
+namespace {
+    constexpr std::size_t kPathBufferSize = 4096;
+}
 
 namespace TBase {
 
@@ -42,10 +48,11 @@ namespace TBase {
     }
 
     std::string getCurWorkDir() {
-        char buff[TAO_MAX_PATH_LEN];
-        getcwd(buff, TAO_MAX_PATH_LEN);
-        std::string cur_work_dir(buff);
-        return cur_work_dir;
+        std::array<char, kPathBufferSize> buff{};
+        if (getcwd(buff.data(), buff.size()) == nullptr) {
+            throw std::runtime_error("Failed to retrieve current working directory.");
+        }
+        return std::string(buff.data());
     }
 
     std::string joinPath(const std::vector<std::string> &paths) {
@@ -90,11 +97,12 @@ namespace TBase {
     }
 
     void killProcessByName(const char* target_process_name) {
-        throw std::exception("Not implemented function.");
+        (void)target_process_name;
+        throw std::runtime_error("Not implemented function.");
     }
 
     int getValidPort() {
-        throw std::exception("Not implemented function.");
+        throw std::runtime_error("Not implemented function.");
     }
 
 }

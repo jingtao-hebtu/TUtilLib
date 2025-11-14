@@ -35,8 +35,10 @@
 #define GET_ARR_INT_CONFIG(index, ...) TBase::TConfig::instance().getArrayConfig<int>({__VA_ARGS__}, index)
 #define GET_ARR_FLOAT_CONFIG(index, ...) TBase::TConfig::instance().getArrayConfig<float>({__VA_ARGS__}, index)
 
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable:4251)
+#endif
 
 namespace TBase {
 
@@ -89,6 +91,8 @@ namespace TBase {
 
 };
 
+#ifdef _MSC_VER
 #pragma warning(pop)
+#endif
 
 #endif //BREAKERMEA_TCONFIG_H

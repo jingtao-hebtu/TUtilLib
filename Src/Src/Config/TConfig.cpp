@@ -130,7 +130,7 @@ namespace TBase {
                 TBASE_LOG_THROW_RUNTIME("[TConfig::getArrayConfig] Key %s is not array.", concat_key.c_str());
             } else if (index >= node.size()) {
                 TBASE_LOG_THROW_RUNTIME("[TConfig::getArrayConfig] Array out of bounds. "
-                                        "Array %s length %d, but indexing %d.", concat_key.c_str(), node.size(), index);
+                                        "Array %s length %zu, but indexing %zu.", concat_key.c_str(), node.size(), index);
             }
             return node[index].as<T>();
         } else if (mImpl->mIniConfigFileMap.find(concat_key) != mImpl->mIniConfigFileMap.end()) {

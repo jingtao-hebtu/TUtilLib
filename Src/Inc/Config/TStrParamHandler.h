@@ -49,14 +49,14 @@ namespace TBase {
         template<typename T>
         T convertTo(const std::string& name) const;
 
-        template<>
-        bool convertTo<bool>(const std::string& name) const;
-
     private:
         class Impl;
         std::unique_ptr<Impl> mImpl;
         //std::map <std::string, std::string> mParams;
     };
+
+    template<>
+    TAO_UTIL_API bool TStrParamHandler::convertTo<bool>(const std::string& name) const;
 
 };
 
