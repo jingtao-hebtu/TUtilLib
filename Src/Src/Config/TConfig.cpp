@@ -122,7 +122,7 @@ namespace TBase {
     template TAO_UTIL_API float TConfig::getConfig<float>(std::initializer_list<const std::string>);
 
     template<typename T>
-    inline T TConfig::getArrayConfig(std::initializer_list<const std::string> keys, std::size_t index) {
+    T TConfig::getArrayConfig(std::initializer_list<const std::string> keys, std::size_t index) {
         std::string concat_key = concatKeys(keys);
         if (mImpl->mYamlConfigFileMap.find(concat_key) != mImpl->mYamlConfigFileMap.end()) {
             YAML::Node node = getYamlNode(keys);
