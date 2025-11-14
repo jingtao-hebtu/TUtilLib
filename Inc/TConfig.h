@@ -59,7 +59,7 @@ namespace TBase {
         T getConfig(std::initializer_list<const std::string> keys);
 
         template<typename T>
-        inline T getArrayConfig(std::initializer_list<const std::string> keys, std::size_t index);
+        T getArrayConfig(std::initializer_list<const std::string> keys, std::size_t index);
 
         TBaseError getSeqNodeLen(std::initializer_list<const std::string> keys, std::size_t &seq_len);
 
