@@ -13,7 +13,8 @@
 
 #include "TLog.h"
 #include <cstdarg>
-#include <exception>
+#include <cstdio>
+#include <stdexcept>
 #include <string>
 
 
@@ -26,21 +27,21 @@ throw TBase::TBaseException(TBase::formatVarsToString(__VA_ARGS__)); \
 
 namespace TBase {
 
-    static inline std::string formatVarsToString(const char *fmt...) {
+    static inline std::string formatVarsToString(const char *fmt, ...) {
         char buf[512] = {0};
         std::va_list args;
-                va_start(args, fmt);
-        vsprintf_s(buf, fmt, args);
-                va_end(args);
-        return buf;
+        va_start(args, fmt);
+        vsnprintf(buf, sizeof(buf), fmt, args);
+        va_end(args);
+        return std::string(buf);
     }
 
-    class TBaseException : public std::exception {
+    class TBaseException : public std::runtime_error {
 
     public:
-        explicit TBaseException(const char *msg) : std::exception(msg) {}
+        explicit TBaseException(const char *msg) : std::runtime_error(msg ? msg : "") {}
 
-        explicit TBaseException(const std::string &msg) : std::exception(msg.c_str()) {}
+        explicit TBaseException(const std::string &msg) : std::runtime_error(msg) {}
 
     };
 

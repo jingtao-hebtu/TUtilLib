@@ -84,7 +84,7 @@ namespace TBase {
     template<typename T>
     T TIniHandler::getValue(std::initializer_list<const std::string> keys) {
         if (keys.size() != 2) {
-            TBASE_LOG_THROW_RUNTIME("[TIniHandler::getValue] Invalid keys size %d.", keys.size());
+            TBASE_LOG_THROW_RUNTIME("[TIniHandler::getValue] Invalid keys size %zu.", keys.size());
         }
         auto it = keys.begin();
         std::string section_name = *it++;
