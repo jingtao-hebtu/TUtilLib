@@ -14,11 +14,19 @@
 #include <sstream>
 #include <stdexcept>
 #include <ctime>
+#include <filesystem>
+#include <fstream>
+#include <algorithm>
+#include <system_error>
+#include <csignal>
+#include <cctype>
 #include <unistd.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <cerrno>
 #include <pwd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 
 
 #define TAO_ACCESS(fileName, accessMode) access(fileName,accessMode)
@@ -45,6 +53,33 @@ namespace TBase {
         } else {
             return false;
         }
+    }
+
+    bool createDir(const std::string &dir_path) {
+        if (dir_path.empty()) {
+            return false;
+        }
+
+        std::error_code ec;
+        const auto path = std::filesystem::path(dir_path);
+        if (std::filesystem::exists(path, ec)) {
+            if (ec) {
+                return false;
+            }
+            return std::filesystem::is_directory(path, ec);
+        }
+
+        bool created = std::filesystem::create_directories(path, ec);
+        if (ec) {
+            return false;
+        }
+
+        std::error_code verify_ec;
+        if (std::filesystem::exists(path, verify_ec)) {
+            return true;
+        }
+
+        return created && !verify_ec;
     }
 
     std::string getCurWorkDir() {
@@ -97,12 +132,69 @@ namespace TBase {
     }
 
     void killProcessByName(const char* target_process_name) {
-        (void)target_process_name;
-        throw std::runtime_error("Not implemented function.");
+        if (target_process_name == nullptr || target_process_name[0] == '\0') {
+            return;
+        }
+
+        std::error_code ec;
+        for (const auto &entry : std::filesystem::directory_iterator("/proc", ec)) {
+            if (ec) {
+                break;
+            }
+
+            if (!entry.is_directory(ec)) {
+                if (ec) {
+                    ec.clear();
+                }
+                continue;
+            }
+
+            const std::string pid_str = entry.path().filename().string();
+            if (!std::all_of(pid_str.begin(), pid_str.end(), [](unsigned char ch) {
+                return std::isdigit(static_cast<int>(ch)) != 0;
+            })) {
+                continue;
+            }
+
+            std::ifstream comm_file(entry.path() / "comm");
+            if (!comm_file.is_open()) {
+                continue;
+            }
+
+            std::string process_name;
+            std::getline(comm_file, process_name);
+            if (process_name == target_process_name) {
+                pid_t pid = static_cast<pid_t>(std::stoi(pid_str));
+                ::kill(pid, SIGKILL);
+            }
+        }
     }
 
     int getValidPort() {
-        throw std::runtime_error("Not implemented function.");
+        int sockfd = ::socket(AF_INET, SOCK_STREAM, 0);
+        if (sockfd < 0) {
+            return 0;
+        }
+
+        sockaddr_in addr{};
+        addr.sin_family = AF_INET;
+        addr.sin_addr.s_addr = htonl(INADDR_ANY);
+        addr.sin_port = 0;
+
+        if (::bind(sockfd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) < 0) {
+            ::close(sockfd);
+            return 0;
+        }
+
+        socklen_t len = sizeof(addr);
+        if (::getsockname(sockfd, reinterpret_cast<sockaddr*>(&addr), &len) == -1) {
+            ::close(sockfd);
+            return 0;
+        }
+
+        int port = ntohs(addr.sin_port);
+        ::close(sockfd);
+        return port;
     }
 
 }
