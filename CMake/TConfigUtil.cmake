@@ -26,6 +26,9 @@ aux_source_directory(${T_CONFIG_SRC_PATH} T_CONFIG_UTIL_SRC)
 ###########
 ## Libs  ##
 ###########
+
 if (YAML_CPP_LIB_TARGET)
     list(APPEND TAO_UTIL_LIBS ${YAML_CPP_LIB_TARGET})
+else()
+    list(APPEND TAO_UTIL_LIBS ${YAML_CPP_LIB_NAME})
 endif ()
