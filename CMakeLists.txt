@@ -8,7 +8,14 @@ project(TUtilLib)
 
 # ---- Compilations ----
 set(CMAKE_CXX_STANDARD 20)
-set(BUILD_SHARED_LIBS ON)
+
+option(TUTIL_BUILD_SHARED "Build TUtilLib shared library" ON)
+option(TUTIL_BUILD_STATIC "Build TUtilLib static library" ON)
+
+if (NOT TUTIL_BUILD_SHARED AND NOT TUTIL_BUILD_STATIC)
+    message(FATAL_ERROR "At least one of TUTIL_BUILD_SHARED or TUTIL_BUILD_STATIC must be ON.")
+endif ()
+
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 if (MSVC)

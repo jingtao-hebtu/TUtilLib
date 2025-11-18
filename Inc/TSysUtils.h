@@ -38,7 +38,7 @@ namespace TBase {
 
     TAO_UTIL_API std::string joinPath(const std::string &path, const std::string &file_name);
 
-    TAO_UTIL_API std::string searchFileInParentDirs(std::string file_name, bool &found,
+    TAO_UTIL_API std::string searchFileInParentDirs(const std::string &file_name, bool &found,
                                                     std::uint8_t search_folder_levels = 5);
 
     TAO_UTIL_API std::string getDirFromFilePath(const std::string &file_path);

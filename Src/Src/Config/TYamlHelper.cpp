@@ -63,8 +63,8 @@ namespace TBase::TYamlHelper {
                            std::vector<std::string> &keys) {
         if (node.IsMap()) {
             for (auto it = node.begin(); it != node.end(); ++it) {
-                const YAML::Node &key = it->first;
-                const YAML::Node &value = it->second;
+                YAML::Node key = it->first;
+                YAML::Node value = it->second;
 
                 std::string addi_prefix;
                 if (key.IsScalar()) {

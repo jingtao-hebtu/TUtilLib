@@ -8,13 +8,18 @@
    Date   : 2023/11/25
    Brief  : 
 **************************************************************************/
-#include "TSysUtils.h"
+#include <algorithm>
 
+#include "TSysUtils.h"
 #include <utility>
 #include <vector>
 #include <fstream>
 #include <filesystem>
+#include <algorithm>
 #include <iostream>
+
+
+namespace fs = std::filesystem;
 
 
 namespace TBase {
@@ -50,19 +55,38 @@ namespace TBase {
         return joinPath(paths, file_name);
     }
 
-    std::string searchFileInParentDirs(std::string file_name,
+    inline std::string normalizePath(std::string path) {
+        std::replace(path.begin(), path.end(), '\\', '/');
+        return path;
+    }
+
+    std::string searchFileInParentDirs(const std::string &file_name,
                                        bool &found,
                                        std::uint8_t search_folder_levels) {
-        std::string file_path = std::move(file_name);
-        for (uint8_t level = 0; level < search_folder_levels; level++) {
-            if (fileExists(file_path)) {
+
+        std::string file_path = normalizePath(file_name);
+
+        fs::path rel = fs::path(file_path);
+        fs::path cur = fs::current_path();
+        std::string last_candidate;
+
+        for (std::uint8_t level = 0; level < search_folder_levels; level++) {
+            fs::path candidate = cur / rel;
+            last_candidate = candidate.string();
+
+            if (fs::exists(candidate)) {
                 found = true;
-                return file_path;
+                return last_candidate;
             }
-            file_path = std::string("../").append(file_path);
+
+            if (!cur.has_parent_path()) {
+                break;
+            }
+            cur = cur.parent_path();
         }
+
         found = false;
-        return file_path;
+        return last_candidate;
     }
 
 }
