@@ -13,7 +13,9 @@
 
 
 #ifdef _WIN32
-    #ifdef BUILDING_DLL
+    #if defined(TAO_UTIL_STATIC)
+        #define TAO_UTIL_API
+    #elif defined(BUILDING_DLL)
         #define TAO_UTIL_API __declspec(dllexport)
     #else
         #define TAO_UTIL_API __declspec(dllimport)

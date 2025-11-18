@@ -35,15 +35,13 @@ set(TAO_UTIL_LIB_SRC
         ${T_CONFIG_UTIL_SRC}
 )
 
-add_library(${PROJECT_NAME}_objects OBJECT ${TAO_UTIL_LIB_SRC})
-set_target_properties(${PROJECT_NAME}_objects PROPERTIES POSITION_INDEPENDENT_CODE ON)
-
 function(tutil_configure_library target)
     set_target_properties(${target} PROPERTIES
             DEBUG_POSTFIX "d"
             ARCHIVE_OUTPUT_DIRECTORY ${TAO_UTIL_LIB_OUTPUT_PATH}
             LIBRARY_OUTPUT_DIRECTORY ${TAO_UTIL_LIB_OUTPUT_PATH}
             RUNTIME_OUTPUT_DIRECTORY ${TAO_UTIL_LIB_OUTPUT_PATH}
+            POSITION_INDEPENDENT_CODE ON
     )
 
     if(WIN32)
@@ -55,7 +53,7 @@ function(tutil_configure_library target)
 endfunction()
 
 if (TUTIL_BUILD_SHARED)
-    add_library(${PROJECT_NAME}_shared SHARED $<TARGET_OBJECTS:${PROJECT_NAME}_objects>)
+    add_library(${PROJECT_NAME}_shared SHARED ${TAO_UTIL_LIB_SRC})
     target_compile_definitions(${PROJECT_NAME}_shared PRIVATE BUILDING_DLL)
     set_target_properties(${PROJECT_NAME}_shared PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
     tutil_configure_library(${PROJECT_NAME}_shared)
@@ -64,8 +62,18 @@ if (TUTIL_BUILD_SHARED)
 endif ()
 
 if (TUTIL_BUILD_STATIC)
-    add_library(${PROJECT_NAME}_static STATIC $<TARGET_OBJECTS:${PROJECT_NAME}_objects>)
-    set_target_properties(${PROJECT_NAME}_static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+    add_library(${PROJECT_NAME}_static STATIC ${TAO_UTIL_LIB_SRC})
+    target_compile_definitions(${PROJECT_NAME}_static PUBLIC TAO_UTIL_STATIC)
+
+    # Windows produces a .lib import library for shared targets which collides with the
+    # static library when both are enabled. Give the static target a unique name to avoid
+    # "multiple rules generate" errors from Ninja on that platform.
+    set(_tutil_static_output_name ${PROJECT_NAME})
+    if (WIN32 AND TUTIL_BUILD_SHARED)
+        set(_tutil_static_output_name "${PROJECT_NAME}_static")
+    endif ()
+    set_target_properties(${PROJECT_NAME}_static PROPERTIES OUTPUT_NAME ${_tutil_static_output_name})
+
     tutil_configure_library(${PROJECT_NAME}_static)
     add_library(${PROJECT_NAME}::static ALIAS ${PROJECT_NAME}_static)
     if (NOT TUTIL_BUILD_SHARED)
