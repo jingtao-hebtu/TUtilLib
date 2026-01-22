@@ -49,7 +49,7 @@ function(tutil_configure_library target)
         target_link_libraries(${target} PRIVATE Ws2_32)
     endif()
 
-    target_link_libraries(${target} PRIVATE ${TAO_UTIL_LIBS})
+    target_link_libraries(${target} PUBLIC ${TAO_UTIL_LIBS})
 endfunction()
 
 if (TUTIL_BUILD_SHARED)

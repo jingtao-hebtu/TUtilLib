@@ -34,4 +34,10 @@ find_package(yaml-cpp PATHS ${YAML_CPP_CMAKE_CONFIG_PATH} NO_CACHE REQUIRED
         NO_PACKAGE_ROOT_PATH
 )
 
+if (TARGET yaml-cpp::yaml-cpp)
+    set(YAML_CPP_LIB_TARGET yaml-cpp::yaml-cpp)
+elseif (TARGET yaml-cpp)
+    set(YAML_CPP_LIB_TARGET yaml-cpp)
+endif ()
+
 link_directories(${THIRD_PARTY_YAML_CPP_PATH}/lib)

@@ -115,11 +115,19 @@ namespace TBase {
 
     std::string getDirFromFilePath(const std::string &file_path) {
         std::string dir;
-        size_t last_slash_idx = file_path.rfind('\\');
-        if (last_slash_idx == std::string::npos) {
-            last_slash_idx = file_path.rfind('/');
+        size_t last_backslash = file_path.rfind('\\');
+        size_t last_slash = file_path.rfind('/');
+
+        size_t last_slash_idx = std::string::npos;
+        if (last_backslash != std::string::npos && last_slash != std::string::npos) {
+            last_slash_idx = (last_backslash > last_slash) ? last_backslash : last_slash;
+        } else if (last_backslash != std::string::npos) {
+            last_slash_idx = last_backslash;
+        } else if (last_slash != std::string::npos) {
+            last_slash_idx = last_slash;
         }
-        if (std::string::npos != last_slash_idx) {
+
+        if (last_slash_idx != std::string::npos) {
             dir = file_path.substr(0, last_slash_idx + 1);
         }
         return dir;

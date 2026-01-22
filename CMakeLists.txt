@@ -44,6 +44,7 @@ set(EXECUTABLE_OUTPUT_PATH ${BASE_OUTPUT_DIR}/${PROJECT_NAME})
 
 set(TAO_UTIL_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_subdirectory(Tests)
 
 include(${TAO_UTIL_LIB_PATH}/CMake/TaoUtilLib.cmake)
+
+add_subdirectory(Tests)
