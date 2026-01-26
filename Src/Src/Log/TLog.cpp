@@ -18,7 +18,7 @@
 namespace TBase {
 
 
-    void initDateLog(int argc, char *argv[]) {
+    void initDateLog(int argc, char *argv[], const char *app_name) {
 
         std::cout << "Init app log..." << std::endl;
         loguru::init(argc, argv);
@@ -36,7 +36,7 @@ namespace TBase {
         }
 
         // Create log file
-        std::string cur_date = TBase::getDate('_');
+        std::string cur_date = std::string(app_name) + std::string("-") + TBase::getDate('_');
         std::string log_file_name = cur_date + std::string(".log");
         std::string log_file_path = TBase::joinPath(log_dir, log_file_name);
 

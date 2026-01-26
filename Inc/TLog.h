@@ -12,8 +12,8 @@
 #ifndef BREAKERMEA_TLOG_H
 #define BREAKERMEA_TLOG_H
 
-
 #include "TaoUtilDefine.h"
+
 
 #ifdef LOGURU_EXPORT
 #undef LOGURU_EXPORT
@@ -25,7 +25,7 @@
 
 namespace TBase {
 
-    void TAO_UTIL_API initDateLog(int argc, char *argv[]);
+    void TAO_UTIL_API initDateLog(int argc, char *argv[], const char *app_name=nullptr);
 
 };
 
