@@ -29,6 +29,9 @@
 #include <netinet/in.h>
 
 
+namespace fs = std::filesystem;
+
+
 #define TAO_ACCESS(fileName, accessMode) access(fileName,accessMode)
 #define MKDIR(path) mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
 
@@ -91,12 +94,23 @@ namespace TBase {
     }
 
     std::string joinPath(const std::vector<std::string> &paths) {
-        std::string path_sep = std::string("/");
-        std::string joined_path;
+        fs::path joined_path;
+        bool has_component = false;
+
         for (const std::string &ele: paths) {
-            joined_path += ele;
-            joined_path += path_sep;
+            if (ele.empty()) {
+                continue;
+            }
+
+            if (!has_component) {
+                joined_path = fs::path(ele);
+                has_component = true;
+            } else {
+                joined_path /= fs::path(ele);
+            }
         }
+
+        joined_path.make_preferred();
         return joined_path;
     }
 

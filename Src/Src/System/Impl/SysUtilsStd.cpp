@@ -8,8 +8,6 @@
    Date   : 2023/11/25
    Brief  : 
 **************************************************************************/
-#include <algorithm>
-
 #include "TSysUtils.h"
 #include <utility>
 #include <vector>
@@ -45,8 +43,9 @@ namespace TBase {
     }
 
     std::string joinPath(const std::vector<std::string> &paths, const std::string &file_name) {
-        std::string joined_path = joinPath(paths);
-        return joined_path + file_name;
+        std::vector<std::string> merged_paths = paths;
+        merged_paths.emplace_back(file_name);
+        return joinPath(merged_paths);
     }
 
     std::string joinPath(const std::string &path, const std::string &file_name) {
@@ -55,23 +54,24 @@ namespace TBase {
         return joinPath(paths, file_name);
     }
 
-    inline std::string normalizePath(std::string path) {
-        std::replace(path.begin(), path.end(), '\\', '/');
-        return path;
+    inline std::string normalizePath(const std::string &path) {
+        fs::path normalized_path(path);
+        normalized_path.make_preferred();
+        return normalized_path.string();
     }
 
     std::string searchFileInParentDirs(const std::string &file_name,
                                        bool &found,
                                        std::uint8_t search_folder_levels) {
 
-        std::string file_path = normalizePath(file_name);
-
-        fs::path rel = fs::path(file_path);
+        fs::path rel(normalizePath(file_name));
         fs::path cur = fs::current_path();
         std::string last_candidate;
 
         for (std::uint8_t level = 0; level < search_folder_levels; level++) {
             fs::path candidate = cur / rel;
+            candidate = fs::absolute(candidate);
+            candidate.make_preferred();
             last_candidate = candidate.string();
 
             if (fs::exists(candidate)) {
