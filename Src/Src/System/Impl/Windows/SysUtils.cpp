@@ -90,8 +90,7 @@ namespace TBase {
             }
         }
 
-        joined_path.make_preferred();
-        return joined_path;
+        return joined_path.make_preferred().string();
     }
 
     std::string getDate(char split_char) {
