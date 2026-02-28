@@ -52,7 +52,7 @@ target_link_libraries(TUtilTest PUBLIC gtest gtest_main)
 
 
 set(DEBUG_SUFFIX)
-if (MSVC AND CMAKE_BUILD_TYPE MATCHES "Debug")
+if (CMAKE_BUILD_TYPE MATCHES "Debug")
     set(LINK_LIB_TYPE "Debug")
     set(DEBUG_SUFFIX "d")
 else ()
@@ -90,7 +90,7 @@ elseif (UNIX)
     )
     add_custom_command(TARGET TUtilTest POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${BASE_OUTPUT_DIR}/TUtilLib/TUtilLib${DEBUG_SUFFIX}.so"
+            "${BASE_OUTPUT_DIR}/TUtilLib/libTUtilLib${DEBUG_SUFFIX}.so"
             "${BASE_OUTPUT_DIR}/TaoUtilTests/"
     )
 endif ()

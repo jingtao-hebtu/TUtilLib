@@ -3,7 +3,7 @@
 # *
 
 if (UNIX)
-    set(THIRD_PARTY_YAML_CPP_PATH_PREFIX "/home/tao/software/libs/yaml/install/0_7_0/")
+    set(THIRD_PARTY_YAML_CPP_PATH_PREFIX "/home/fire/project/library/yaml-cpp/0_7_0/")
 else(WIN32)
     set(THIRD_PARTY_YAML_CPP_PATH_PREFIX "E:/Software/Library/YamlCpp/install/0_7_0/")
 endif()
